@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/fetchLeaderboard", "destination": "/api/fetchLeaderboard.js" }
+  ]
+}
