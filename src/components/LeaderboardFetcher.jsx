@@ -14,11 +14,15 @@ const LeaderboardFetcher = () => {
       setError('');
       setHtml('');
       setParsedLeaderboard([]);
-      const response = await fetch(url);
+      setManualMode(false);
+
+      const response = await fetch(`/api/fetchLeaderboard?url=${encodeURIComponent(url)}`);
       if (!response.ok) throw new Error('Fetch failed');
       const text = await response.text();
       setHtml(text);
+      parseHtmlToLeaderboard(text);
     } catch (err) {
+      console.error(err);
       setError('Could not fetch leaderboard. You can paste HTML manually below.');
       setManualMode(true);
     }
@@ -27,7 +31,10 @@ const LeaderboardFetcher = () => {
   const handleManualHtmlChange = (e) => {
     const rawHtml = e.target.value;
     setHtml(rawHtml);
+    parseHtmlToLeaderboard(rawHtml);
+  };
 
+  const parseHtmlToLeaderboard = (rawHtml) => {
     const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
     const table = doc.querySelector('table');
     if (!table) {
